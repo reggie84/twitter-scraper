@@ -10,6 +10,12 @@ type (
 		Name     string
 	}
 
+	// Gif type.
+	Gif struct {
+		ID  string
+		URL string
+	}
+	
 	// Photo type.
 	Photo struct {
 		ID  string
@@ -58,6 +64,8 @@ type (
 		Videos            []Video
 		Views             int
 		SensitiveContent  bool
+		Type              string
+		Gif               []Gif
 	}
 
 	// ProfileResult of scrapping.
