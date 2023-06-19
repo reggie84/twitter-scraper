@@ -239,7 +239,18 @@ func parseLegacyTweet(user *legacyUser, tweet *legacyTweet) *Tweet {
 	}
 
 	for _, media := range tweet.ExtendedEntities.Media {
-		if media.Type == "photo" {
+		tw.Type = media.Type
+		if media.Type == "animated_gif" {
+			gif := Gif{
+				ID:  media.IDStr,
+				URL: media.URL,
+			}
+			for _, variant := range media.VideoInfo.Variants {
+				gif.URL = variant.URL
+			}
+
+			tw.Gif = append(tw.Gif, gif)
+		} else if media.Type == "photo" {
 			photo := Photo{
 				ID:  media.IDStr,
 				URL: media.MediaURLHttps,
@@ -255,7 +266,7 @@ func parseLegacyTweet(user *legacyUser, tweet *legacyTweet) *Tweet {
 			maxBitrate := 0
 			for _, variant := range media.VideoInfo.Variants {
 				if variant.Bitrate > maxBitrate {
-					video.URL = strings.TrimSuffix(variant.URL, "?tag=10")
+					video.URL = strings.TrimSuffix(variant.URL, "?tag=12")
 					maxBitrate = variant.Bitrate
 				}
 			}
